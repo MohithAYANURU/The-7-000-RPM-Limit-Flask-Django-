@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Racing Story Hub</title>
+    <style>
+        body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        .story-card { border: 2px solid #d32f2f; padding: 20px; margin: 20px auto; max-width: 400px; border-radius: 10px; }
+        .start-btn { background: #d32f2f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>CHOOSE YOUR RACE</h1>
+    {% for story in stories %}
+    <div class="story-card">
+        <h2>{{ story.title }}</h2>
+        <p>{{ story.description }}</p>
+        <a href="/play/1/" class="start-btn">ENTER RACE</a>
+    </div>
+    {% endfor %}
+</body>
+</html>

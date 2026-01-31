@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ford vs Ferrari - The Game</title>
+    <style>
+        body { background: #111; color: #eee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 50px; text-align: center; }
+        .race-card { border: 2px solid #d32f2f; padding: 30px; border-radius: 10px; max-width: 600px; margin: auto; background: #1a1a1a; }
+        .btn { display: inline-block; padding: 15px 25px; background: #d32f2f; color: white; text-decoration: none; margin: 10px; border-radius: 5px; font-weight: bold; }
+        .btn:hover { background: #b71c1c; }
+    </style>
+</head>
+<body>
+    <div class="race-card">
+        <h1>RACE PROGRESS</h1>
+        <hr>
+        <p style="font-size: 1.3em;">{{ page.text }}</p>
+        <hr>
+
+        {% if page.is_ending %}
+            <h2 style="color: #ffd700;"> MISSION COMPLETE</h2>
+            <a href="/play/1" class="btn">RESTART RACE</a>
+        {% else %}
+            {% for choice in page.choices %}
+                <a href="/play/{{ choice.next_page_id }}" class="btn">
+                    {{ choice.text }}
+                </a>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>
