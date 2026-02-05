@@ -3,19 +3,54 @@
 <head>
     <title>Racing Story Hub</title>
     <style>
-        body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
-        .story-card { border: 2px solid #d32f2f; padding: 20px; margin: 20px auto; max-width: 400px; border-radius: 10px; }
-        .start-btn { background: #d32f2f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 50px; background: #222; margin-bottom: 20px; }
+        .story-card { border: 2px solid #d32f2f; padding: 20px; margin: 20px auto; max-width: 500px; border-radius: 10px; background: #1a1a1a; }
+        .btn { background: #d32f2f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 5px; }
+        .search-input { padding: 10px; width: 300px; border-radius: 5px; border: none; }
+        .stats { color: #888; font-size: 0.9em; margin-top: 10px; }
     </style>
 </head>
 <body>
+
+    <div class="nav">
+        <div style="font-weight: bold; color: #d32f2f;">🏁 RACING ENGINE</div>
+        <div>
+            {% if user.is_authenticated %}
+                <span>Hello, <b>{{ user.username }}</b></span>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" style="background:#444">LOGOUT</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn">LOGIN</a>
+                <a href="{% url 'register' %}" class="btn" style="background:#444">JOIN LEAGUE</a>
+            {% endif %}
+        </div>
+    </div>
+
     <h1>CHOOSE YOUR RACE</h1>
+
+    <form method="GET" action="{% url 'home' %}">
+        <input type="text" name="search" class="search-input" placeholder="Filter by race name..." value="{{ query }}">
+        <button type="submit" class="btn">SEARCH</button>
+    </form>
+
     {% for story in stories %}
     <div class="story-card">
         <h2>{{ story.title }}</h2>
         <p>{{ story.description }}</p>
-        <a href="/play/1/" class="start-btn">ENTER RACE</a>
+        
+        <div class="stats">
+            🏎️ Total Runs: {{ story.play_count|default:"0" }}
+        </div>
+        
+        <br>
+        <a href="{% url 'play_game' story.id %}" class="btn">ENTER RACE</a>
     </div>
+    {% empty %}
+        <p>No races found. Check back after the next qualifying round!</p>
     {% endfor %}
+
 </body>
 </html>
