@@ -1,26 +1,30 @@
 databases:
-  - name: shared-racing-db  # Use one instance for both
+  - name: racing-shared-db  # This matches the one already in your dashboard
     plan: free
 
 services:
   - type: web
     name: flask-api-service
     env: docker
+    plan: free
     dockerContext: ./flask_api
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: shared-racing-db
+          name: racing-shared-db
           property: connectionString
-        # We will manually append /flask_db in the dashboard later
 
   - type: web
     name: django-racing-web
     env: docker
+    plan: free
     dockerContext: ./django_web
     envVars:
+      - key: FLASK_API_URL
+        value: https://flask-api-service.onrender.com
       - key: DATABASE_URL
         fromDatabase:
-          name: shared-racing-db
+          name: racing-shared-db
           property: connectionString
-        # We will manually append /django_db in the dashboard later
+      - key: SECRET_KEY
+        generateValue: true
