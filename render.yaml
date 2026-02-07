@@ -1,12 +1,6 @@
 databases:
-  # 1. The Flask Database instance
-  - name: flask-db-instance
-    databaseName: flask_db
-    plan: free
-
-  # 2. The Django Database instance
-  - name: django-db-instance
-    databaseName: django_db
+  # Define ONLY ONE free tier database instance
+  - name: racing-shared-db
     plan: free
 
 services:
@@ -19,7 +13,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: flask-db-instance
+          name: racing-shared-db
           property: connectionString
 
   # 2. The Django Web App
@@ -33,7 +27,7 @@ services:
         value: https://flask-api-service.onrender.com
       - key: DATABASE_URL
         fromDatabase:
-          name: django-db-instance
+          name: racing-shared-db
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
