@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Racing Engine - Create Race</title>
+    <style>
+        body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        .form-card { border: 2px solid #d32f2f; padding: 40px; margin: auto; max-width: 500px; border-radius: 10px; background: #1a1a1a; }
+        .input-field { width: 90%; padding: 12px; margin: 15px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; }
+        .btn { background: #d32f2f; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn:hover { background: #b71c1c; }
+        .back-link { display: block; margin-top: 20px; color: #888; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>🆕 NEW RACE SPECIFICATIONS</h1>
+    <div class="form-card">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="title" class="input-field" placeholder="Race Title (e.g., Monza Night Circuit)" required>
+            <textarea name="description" class="input-field" style="height: 100px;" placeholder="Brief description of the track and challenges..."></textarea>
+            
+            <p style="font-size: 0.8em; color: #888; text-align: left; margin-left: 5%;">
+                * Publishing will send data to the Flask API via secure handshake.
+            </p>
+            
+            <button type="submit" class="btn">PUBLISH TO HUB</button>
+        </form>
+        <a href="{% url 'home' %}" class="back-link">← Return to Pits</a>
+    </div>
+</body>
+</html>

@@ -21,7 +21,22 @@ from app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    
+    # --- LEVEL 13/16: GAMEPLAY ROUTES ---
     path('play/<int:story_id>/', views.play_game, name='play_game'),
+    path('play/<int:story_id>/<int:page_id>/', views.play_game, name='play_step'),
+    
+    # --- LEVEL 18-20: COMMUNITY & QUALITY FEATURES ---
+    # This fixes the "NoReverseMatch" error for your blue button
+    path('story/<int:story_id>/map/', views.story_map, name='story_map'),
+    
+    # These handle the rating and report submissions
+    path('rate/<int:story_id>/', views.submit_rating, name='submit_rating'),
+    path('report/<int:story_id>/', views.report_story, name='report_story'),
+
+    # --- AUTHENTICATION ---
     path('register/', views.register, name='register'),
-    path('accounts/', include('django.contrib.auth.urls')), # Built-in Login/Logout
+    path('accounts/', include('django.contrib.auth.urls')),
+
+    path('story/<int:story_id>/reviews/', views.story_reviews, name='story_reviews'),
 ]

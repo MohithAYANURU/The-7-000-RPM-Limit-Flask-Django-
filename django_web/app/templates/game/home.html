@@ -4,34 +4,53 @@
     <title>Racing Story Hub</title>
     <style>
         body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
-        .nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 50px; background: #222; margin-bottom: 20px; }
-        .story-card { border: 2px solid #d32f2f; padding: 20px; margin: 20px auto; max-width: 500px; border-radius: 10px; background: #1a1a1a; }
-        .btn { background: #d32f2f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 5px; }
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 50px; background: #222; margin-bottom: 20px; border-bottom: 2px solid #d32f2f; }
+        .story-card { border: 2px solid #d32f2f; padding: 20px; margin: 20px auto; max-width: 500px; border-radius: 10px; background: #1a1a1a; transition: 0.3s; }
+        .story-card:hover { transform: scale(1.02); border-color: #ff5252; }
+        .btn { background: #d32f2f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 5px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-secondary { background: #444; }
+        .btn-map { background: #1e88e5; }
         .search-input { padding: 10px; width: 300px; border-radius: 5px; border: none; }
-        .stats { color: #888; font-size: 0.9em; margin-top: 10px; }
+        .stats { color: #aaa; font-size: 0.9em; margin-top: 15px; background: #252525; padding: 10px; border-radius: 5px; line-height: 1.6; }
+        .rating-stars { color: #fbc02d; font-weight: bold; }
+
+        /* NEW: This targets the blue link and makes it grey */
+        .stats a { 
+            color: #bbb; /* Light grey for better visibility on black */
+            text-decoration: none; 
+            display: block; 
+            transition: 0.2s;
+        }
+        
+        /* Adds a subtle hover effect to indicate it is clickable */
+        .stats a:hover { 
+            color: #eee; 
+            background: #333; 
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
 
     <div class="nav">
-        <div style="font-weight: bold; color: #d32f2f;">🏁 RACING ENGINE</div>
+        <div style="font-weight: bold; color: #d32f2f; font-size: 1.2em;">🏁 RACING ENGINE</div>
         <div>
             {% if user.is_authenticated %}
-                <span>Hello, <b>{{ user.username }}</b></span>
-                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                <span>Driver: <b>{{ user.username }}</b></span>
+                <form action="{% url 'logout' %}" method="post" style="display:inline; margin-left: 10px;">
                     {% csrf_token %}
-                    <button type="submit" class="btn" style="background:#444">LOGOUT</button>
+                    <button type="submit" class="btn btn-secondary">LOGOUT</button>
                 </form>
             {% else %}
                 <a href="{% url 'login' %}" class="btn">LOGIN</a>
-                <a href="{% url 'register' %}" class="btn" style="background:#444">JOIN LEAGUE</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary">JOIN LEAGUE</a>
             {% endif %}
         </div>
     </div>
 
     <h1>CHOOSE YOUR RACE</h1>
 
-    <form method="GET" action="{% url 'home' %}">
+    <form method="GET" action="{% url 'home' %}" style="margin-bottom: 30px;">
         <input type="text" name="search" class="search-input" placeholder="Filter by race name..." value="{{ query }}">
         <button type="submit" class="btn">SEARCH</button>
     </form>
@@ -42,15 +61,26 @@
         <p>{{ story.description }}</p>
         
         <div class="stats">
-            🏎️ Total Runs: {{ story.play_count|default:"0" }}
+            🏎️ <b>Views:</b> {{ story.play_count }} <br>
+            <a href="{% url 'story_reviews' story.id %}">
+                <span class="rating-stars">⭐ Rating:</span> 
+                {% if story.rating_count > 0 %}
+                    <b style="color: #fbc02d; text-decoration: underline;">{{ story.avg_rating }}</b>/5 ({{ story.rating_count }} reviews)
+                {% else %}
+                    <span style="color: #666;">No reviews yet</span>
+                {% endif %}
+            </a>
         </div>
         
-        <br>
-        <a href="{% url 'play_game' story.id %}" class="btn">ENTER RACE</a>
+        <div style="margin-top: 20px;">
+            <a href="{% url 'play_game' story.id %}" class="btn">ENTER RACE</a>
+        </div>
     </div>
     {% empty %}
-        <p>No races found. Check back after the next qualifying round!</p>
+        <div style="margin-top: 50px; color: #666;">
+            <p>No races found matching "{{ query }}".</p>
+            <a href="{% url 'home' %}" style="color: #d32f2f;">Reset Filter</a>
+        </div>
     {% endfor %}
-
 </body>
 </html>
