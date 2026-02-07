@@ -1,11 +1,18 @@
-services:
-  # 1. The PostgreSQL Database
-  - type: db
-    name: race_db
+databases:
+  # 1. The Flask Database
+  - name: flask-db-instance
+    databaseName: flask_db
+    user: postgres
     plan: free
-    ipAllowList: [] 
 
-  # 2. The Flask API (Internal Service)
+  # 2. The Django Database
+  - name: django-db-instance
+    databaseName: django_db
+    user: postgres
+    plan: free
+
+services:
+  # 1. The Flask API
   - type: web
     name: flask-api-service
     env: docker
@@ -14,10 +21,10 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: race_db
+          name: flask-db-instance
           property: connectionString
 
-  # 3. The Django Web App (Public Service)
+  # 2. The Django Web App
   - type: web
     name: django-racing-web
     env: docker
@@ -28,7 +35,7 @@ services:
         value: https://flask-api-service.onrender.com
       - key: DATABASE_URL
         fromDatabase:
-          name: race_db
+          name: django-db-instance
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
