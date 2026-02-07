@@ -1,14 +1,12 @@
 databases:
-  # 1. The Flask Database
+  # 1. The Flask Database instance
   - name: flask-db-instance
     databaseName: flask_db
-    user: postgres
     plan: free
 
-  # 2. The Django Database
+  # 2. The Django Database instance
   - name: django-db-instance
     databaseName: django_db
-    user: postgres
     plan: free
 
 services:
