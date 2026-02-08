@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: racing_shared_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mohith
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  flask_api:
+    build: ./flask_api
+    container_name: flask_service
+    depends_on:
+      - db
+    environment:
+      # Critical: Uses 'db' as the hostname
+      DATABASE_URL: postgresql://postgres:mohith@db:5432/flask_db
+    ports:
+      - "5000:5000"
+
+  django_web:
+    build: ./django_web
+    container_name: django_service
+    depends_on:
+      - db
+      - flask_api
+    environment:
+      # Critical: Uses 'db' for database and 'flask_api' for the internal URL
+      DATABASE_URL: postgresql://postgres:mohith@db:5432/django_db
+      FLASK_API_URL: http://flask_api:5000
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:

@@ -1,0 +1,2 @@
+CREATE DATABASE flask_db;
+CREATE DATABASE django_db;
