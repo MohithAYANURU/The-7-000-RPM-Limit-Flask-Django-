@@ -82,18 +82,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
-def story_map(request, story_id):
-    try:
-        res = requests.get(f"{FLASK_BASE_URL}/stories")
-        stories = res.json()
-        story_name = next((s['title'] for s in stories if s['id'] == story_id), "Race Track")
-        
-        return render(request, 'game/visualize.html', {
-            'story_id': story_id,
-            'story_title': story_name
-        })
-    except:
-        return redirect('home')
+
 
 @login_required
 def submit_rating(request, story_id):

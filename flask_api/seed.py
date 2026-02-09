@@ -8,7 +8,6 @@ def seed_story():
         db.create_all()
 
         # 2. The Main Story Header
-        # Level 13: Added 'status' so it shows on the hub
         ford_story = Story(
             title="Le Mans '66: The 7,000 RPM Limit",
             description="The true story of Carroll Shelby, Ken Miles, and the battle to beat Ferrari.",
@@ -22,7 +21,6 @@ def seed_story():
         
         p2 = Page(story_id=ford_story.id, text="You listen to Ken. You redesign the brakes and the aero. The car is now a beast. You arrive at Le Mans '66. The Ferrari 330 P3 is ahead. Ken wants to push the engine to 7,000 RPM to pass. Do you allow it?")
         
-        # Level 13: Added 'ending_label' for specific ending names
         p3 = Page(story_id=ford_story.id, 
                   text="You ignored Ken to save money. At the first corner of Le Mans, your brakes explode. You crash out in front of Henry Ford II. You're fired. GAME OVER.", 
                   is_ending=True, 
@@ -56,7 +54,7 @@ def seed_story():
         db.session.add(Choice(page_id=p4.id, text="Tell Ken to go for the win!", next_page_id=p6.id))
 
         db.session.commit()
-        print("🏁 Full Level 13/16 scenario loaded into Postgres!")
+        print("🏁 Ford scenario loaded into Postgres!")
 
 if __name__ == "__main__":
     seed_story()

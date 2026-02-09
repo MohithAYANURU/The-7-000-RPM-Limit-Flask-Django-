@@ -22,11 +22,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     
-    # --- LEVEL 13/16: GAMEPLAY ROUTES ---
     path('play/<int:story_id>/', views.play_game, name='play_game'),
     path('play/<int:story_id>/<int:page_id>/', views.play_game, name='play_step'),
     
-    # --- LEVEL 18-20: COMMUNITY & QUALITY FEATURES ---
+  
     # This fixes the "NoReverseMatch" error for your blue button
     path('story/<int:story_id>/map/', views.story_map, name='story_map'),
     

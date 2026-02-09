@@ -8,7 +8,6 @@ class Play(models.Model):
     ending_label = models.CharField(max_length=255, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-# --- LEVEL 18-20: COMMUNITY FEATURES ---
 
 class StoryRating(models.Model):
     # Authenticated users only
@@ -26,7 +25,7 @@ class StoryRating(models.Model):
 class StoryReport(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     story_id = models.IntegerField()
-    reason = models.CharField(max_length=255) # e.g., "Broken Link", "Inappropriate"
+    reason = models.CharField(max_length=255) 
     description = models.TextField()
     is_resolved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
