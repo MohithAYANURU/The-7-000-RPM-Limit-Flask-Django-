@@ -1,31 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Racing Engine - Create Race</title>
+    <meta charset="UTF-8">
+    <title>Racing Architect Hub</title>
     <style>
-        body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
-        .form-card { border: 2px solid #d32f2f; padding: 40px; margin: auto; max-width: 500px; border-radius: 10px; background: #1a1a1a; }
-        .input-field { width: 90%; padding: 12px; margin: 15px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; }
-        .btn { background: #d32f2f; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn:hover { background: #b71c1c; }
-        .back-link { display: block; margin-top: 20px; color: #888; text-decoration: none; }
+        :root { --red: #d32f2f; --blue: #1e88e5; --bg: #0f0f0f; --card: #1a1a1a; }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        .container { max-width: 700px; margin: auto; }
+        .card { background: var(--card); border-radius: 8px; padding: 25px; margin-bottom: 25px; border: 1px solid #333; }
+        .section-title { border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--red); text-transform: uppercase; margin-bottom: 15px; }
+        label { display: block; font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        .input-field { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
+        .btn-launch { width: 100%; padding: 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; background: var(--red); color: white; font-size: 1.2em; }
     </style>
 </head>
 <body>
-    <h1>🆕 NEW RACE SPECIFICATIONS</h1>
-    <div class="form-card">
-        <form method="POST">
-            {% csrf_token %}
-            <input type="text" name="title" class="input-field" placeholder="Race Title (e.g., Monza Night Circuit)" required>
-            <textarea name="description" class="input-field" style="height: 100px;" placeholder="Brief description of the track and challenges..."></textarea>
-            
-            <p style="font-size: 0.8em; color: #888; text-align: left; margin-left: 5%;">
-                * Publishing will send data to the Flask API via secure handshake.
-            </p>
-            
-            <button type="submit" class="btn">PUBLISH TO HUB</button>
-        </form>
-        <a href="{% url 'home' %}" class="back-link">← Return to Pits</a>
-    </div>
+
+<div class="container">
+    <h1 style="text-align: center; letter-spacing: 2px;">🏁 ARCHITECT HUB</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card">
+            <div class="section-title">Step 1: Track Meta</div>
+            <label>Name</label>
+            <input type="text" name="title" class="input-field" placeholder="Le Mans '66" required>
+            <label>Description</label>
+            <input type="text" name="description" class="input-field" placeholder="Briefing...">
+        </div>
+
+        <div class="card">
+            <div class="section-title">Step 2: Starting Scene</div>
+            <label>Scenario Text</label>
+            <textarea name="scenario_text" class="input-field" rows="4" placeholder="The engine roars..." required></textarea>
+        </div>
+
+        <div class="card" style="border-bottom: 4px solid var(--blue);">
+            <div class="section-title" style="color: var(--blue);">Step 3: First Decision</div>
+            <label>Button Label</label>
+            <input type="text" name="choice_text" class="input-field" placeholder="Floor the throttle!" required>
+        </div>
+
+        <button type="submit" class="btn-launch"> SAVE</button>
+
+        <a href="{% url 'home' %}" style="color: #d32f2f;">HOME</a>
+    </form>
+</div>
+
 </body>
 </html>

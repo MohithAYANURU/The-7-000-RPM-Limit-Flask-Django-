@@ -76,9 +76,11 @@ WSGI_APPLICATION = 'webdev.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
+        default='postgresql://postgres:mohith@localhost:5432/django_db'
     )
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Password validation
@@ -121,4 +123,4 @@ STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-ALLOWED_HOSTS = ['*']  
+# ALLOWED_HOSTS = ['*']  

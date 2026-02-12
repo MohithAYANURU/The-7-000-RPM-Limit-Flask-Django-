@@ -7,7 +7,7 @@ from django.db.models import Count, Avg
 from .models import Play, StoryRating, StoryReport
 
 # CRITICAL: Use the Docker service name 'flask_api' instead of 127.0.0.1
-FLASK_BASE_URL = "http://flask_api:5000"
+FLASK_BASE_URL = "http://127.0.0.1:5000"
 
 def home(request):
     query = request.GET.get('search', '')
@@ -123,3 +123,112 @@ def story_reviews(request, story_id):
         'story': story,
         'reviews': reviews
     })
+
+@login_required
+def create_race(request):
+    if request.method == "POST":
+        # 1. Grab data from your HTML form
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        scenario_text = request.POST.get('scenario_text')
+        choice_text = request.POST.get('choice_text')
+
+        try:
+            # STEP A: Create the Story
+            s_res = requests.post(f"{FLASK_BASE_URL}/stories", json={
+                "title": title, "description": description
+            })
+            story_id = s_res.json().get('id')
+
+            # STEP B: Create the First Page
+            p_res = requests.post(f"{FLASK_BASE_URL}/stories/{story_id}/pages", json={
+                "text": scenario_text, "is_ending": False
+            })
+            page_id = p_res.json().get('id')
+
+            # STEP C: Create the First Choice
+            requests.post(f"{FLASK_BASE_URL}/pages/{page_id}/choices", json={
+                "text": choice_text, "next_page_id": None
+            })
+
+            # STEP D: THE FIX - Link the start_page_id to the story
+            # This makes the URL path('play/<int:story_id>/', ...) work!
+            requests.put(f"{FLASK_BASE_URL}/stories/{story_id}", json={
+                "start_page_id": page_id
+            })
+
+            # 2. Redirect to home page
+            return redirect('home')
+            
+        except Exception as e:
+            print(f"Launch Error: {e}")
+            return render(request, 'game/create_story.html', {'error': 'API Connection Error'})
+
+    return render(request, 'game/create_story.html')
+
+
+
+
+@login_required
+def add_page_view(request, story_id):
+    if request.method == "POST":
+        page_data = {
+            "text": request.POST.get('text'),
+            "is_ending": request.POST.get('is_ending') == 'on',
+            "ending_label": request.POST.get('ending_label', '')
+        }
+        
+        # Send to Flask API
+        response = requests.post(f"{FLASK_BASE_URL}/stories/{story_id}/pages", json=page_data)
+        
+        if response.status_code == 201:
+            return redirect('home') # For now, go home. Later, you can redirect to add more choices.
+
+    return render(request, 'game/create_story.html', {'story_id': story_id})
+
+
+@login_required
+def add_choice_view(request, story_id, page_id):
+    if request.method == "POST":
+        choice_data = {
+            "text": request.POST.get('text'),
+            "next_page_id": request.POST.get('next_page_id')
+        }
+        
+        # POST to Flask
+        response = requests.post(f"{FLASK_BASE_URL}/pages/{page_id}/choices", json=choice_data)
+        
+        if response.status_code == 201:
+            # Take them back to the story creation hub or the current page
+            return redirect('create_page', story_id=story_id)
+
+    return render(request, 'game/create_story.html', {
+        'story_id': story_id,
+        'page_id': page_id
+    })
+
+
+
+
+
+@login_required
+def delete_race(request, story_id):
+    # Only allow POST or a specific delete action for security
+    try:
+        response = requests.delete(f"{FLASK_BASE_URL}/stories/{story_id}")
+        if response.status_code == 200:
+            # Also delete local Django stats if you want to clean up totally
+            Play.objects.filter(story_id=story_id).delete()
+            StoryRating.objects.filter(story_id=story_id).delete()
+            
+    except Exception as e:
+        print(f"Delete Error: {e}")
+        
+    return redirect('home')
+
+
+
+
+
+
+

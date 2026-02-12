@@ -24,11 +24,7 @@ urlpatterns = [
     
     path('play/<int:story_id>/', views.play_game, name='play_game'),
     path('play/<int:story_id>/<int:page_id>/', views.play_game, name='play_step'),
-    
-  
-    # This fixes the "NoReverseMatch" error for your blue button
-    path('story/<int:story_id>/map/', views.story_map, name='story_map'),
-    
+        
     # These handle the rating and report submissions
     path('rate/<int:story_id>/', views.submit_rating, name='submit_rating'),
     path('report/<int:story_id>/', views.report_story, name='report_story'),
@@ -38,4 +34,12 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
     path('story/<int:story_id>/reviews/', views.story_reviews, name='story_reviews'),
-]
+    
+    #CREATING NEW STORY CHOICE PAGES
+    path('stories/new/', views.create_race, name='create_story'),
+    path('stories/<int:story_id>/add-page/', views.add_page_view, name='create_page'),
+    path('stories/<int:story_id>/pages/<int:page_id>/add-choice/', views.add_choice_view, name='add_choice'),
+
+    #DELETION 
+    path('stories/<int:story_id>/delete/', views.delete_race, name='delete_race'),
+]   
