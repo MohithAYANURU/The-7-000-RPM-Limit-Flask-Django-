@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Avg 
 from .models import Play, StoryRating, StoryReport
 
-# CRITICAL: Use the Docker service name 'flask_api' instead of 127.0.0.1
-FLASK_BASE_URL = "http://127.0.0.1:5000"
+# for Docker service 
+FLASK_BASE_URL = "http://flask_api:5000"
 
 def home(request):
     query = request.GET.get('search', '')

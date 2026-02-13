@@ -74,9 +74,11 @@ WSGI_APPLICATION = 'webdev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# settings.py
+
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres:mohith@localhost:5432/django_db'
+        default=os.environ.get('DATABASE_URL', 'postgresql://postgres:mohith@db:5432/django_db')
     )
 }
 
@@ -123,4 +125,6 @@ STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-# ALLOWED_HOSTS = ['*']  
+ALLOWED_HOSTS = ['*']  
+
+# The URL Django uses to talk to the Flask 
