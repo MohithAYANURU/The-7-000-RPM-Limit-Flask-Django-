@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Avg 
 from .models import Play, StoryRating, StoryReport
 
-# for Docker service 
+ 
 FLASK_BASE_URL = "http://localhost:5000"
 
 def home(request):
@@ -22,11 +22,11 @@ def home(request):
         print(f"Flask Connection Error: {e}")
         stories = []
 
-    # Get local Django DB statistics (Play counts)
+    
     play_stats = Play.objects.values('story_id').annotate(total=Count('id'))
     stats_dict = {item['story_id']: item['total'] for item in play_stats}
 
-    # Get local Django DB statistics (Ratings)
+    
     rating_stats = StoryRating.objects.values('story_id').annotate(
         avg_stars=Avg('stars'), 
         rating_count=Count('id')

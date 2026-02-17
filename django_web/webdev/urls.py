@@ -25,11 +25,10 @@ urlpatterns = [
     path('play/<int:story_id>/', views.play_game, name='play_game'),
     path('play/<int:story_id>/<int:page_id>/', views.play_game, name='play_step'),
         
-    # These handle the rating and report submissions
+   
     path('rate/<int:story_id>/', views.submit_rating, name='submit_rating'),
     path('report/<int:story_id>/', views.report_story, name='report_story'),
 
-    # --- AUTHENTICATION ---
     path('register/', views.register, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
 
