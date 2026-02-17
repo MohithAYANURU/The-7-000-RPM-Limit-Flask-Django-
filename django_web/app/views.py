@@ -7,7 +7,7 @@ from django.db.models import Count, Avg
 from .models import Play, StoryRating, StoryReport
 
 # for Docker service 
-FLASK_BASE_URL = "http://flask_api:5000"
+FLASK_BASE_URL = "http://localhost:5000"
 
 def home(request):
     query = request.GET.get('search', '')
@@ -134,30 +134,30 @@ def create_race(request):
         choice_text = request.POST.get('choice_text')
 
         try:
-            # STEP A: Create the Story
+            #Create the Story
             s_res = requests.post(f"{FLASK_BASE_URL}/stories", json={
                 "title": title, "description": description
             })
             story_id = s_res.json().get('id')
 
-            # STEP B: Create the First Page
+            #Create the First Page
             p_res = requests.post(f"{FLASK_BASE_URL}/stories/{story_id}/pages", json={
                 "text": scenario_text, "is_ending": False
             })
             page_id = p_res.json().get('id')
 
-            # STEP C: Create the First Choice
+            #Create the First Choice
             requests.post(f"{FLASK_BASE_URL}/pages/{page_id}/choices", json={
                 "text": choice_text, "next_page_id": None
             })
 
-            # STEP D: THE FIX - Link the start_page_id to the story
-            # This makes the URL path('play/<int:story_id>/', ...) work!
+            
+            # This makes the URL path('play/<int:story_id>/', ...) work
             requests.put(f"{FLASK_BASE_URL}/stories/{story_id}", json={
                 "start_page_id": page_id
             })
 
-            # 2. Redirect to home page
+            
             return redirect('home')
             
         except Exception as e:
@@ -182,7 +182,7 @@ def add_page_view(request, story_id):
         response = requests.post(f"{FLASK_BASE_URL}/stories/{story_id}/pages", json=page_data)
         
         if response.status_code == 201:
-            return redirect('home') # For now, go home. Later, you can redirect to add more choices.
+            return redirect('home') 
 
     return render(request, 'game/create_story.html', {'story_id': story_id})
 

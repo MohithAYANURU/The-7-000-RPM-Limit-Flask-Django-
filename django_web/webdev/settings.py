@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'webdev.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgresql://postgres:mohith@db:5432/django_db')
+        default=os.environ.get('DATABASE_URL', 'postgresql://postgres:mohith@localhost:5432/django_db')
     )
 }
 
